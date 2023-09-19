@@ -3,7 +3,6 @@ git -C /ipxe pull
 VAR1=$(git -C /ipxe log -1 --pretty=format:"%h" --abbrev-commit --abbrev=4)
 grep -q "${VAR1}" /var/www/html/index.html && echo "There is no changes at `date`" && exit ||
 rm -rf /ipxe
-rm /config-backup/branding.h
 rm /config-backup/general.h
 rm /config-backup/console.h
 echo "ipxe dir removed"
@@ -13,14 +12,8 @@ git clone git://git.ipxe.org/ipxe.git
 sed -i "s/gitversion/${VAR1}/" /var/www/html/index.html
 echo "SETTINGS"
 echo BackUp files
-cp ipxe/src/config/branding.h /config-backup/
 cp ipxe/src/config/general.h /config-backup/
 cp ipxe/src/config/console.h /config-backup/
-echo "Editing branding.h"
-sed -i 's/#define\ PRODUCT_NAME\ ""/#define\ PRODUCT_NAME\ "iPXE-Simple\ project\ by\ sebaxakerhtc"/' ipxe/src/config/branding.h
-sed -i 's/#define\ PRODUCT_SHORT_NAME\ "iPXE"/#define\ PRODUCT_SHORT_NAME\ "ipxe-latest"/' ipxe/src/config/branding.h
-sed -i 's/#define\ PRODUCT_URI\ "http:\/\/ipxe.org"/#define\ PRODUCT_URI\ "https:\/\/paypal.me\/sebaxakerhtc"/' ipxe/src/config/branding.h
-sed -i 's/#define\ PRODUCT_TAG_LINE\ "Open\ Source\ Network\ Boot\ Firmware"/#define\ PRODUCT_TAG_LINE\ "by\ sebaxakerhtc"/' ipxe/src/config/branding.h
 echo "Editing general.h"
 sed -i 's/#undef\tDOWNLOAD_PROTO_HTTPS/#define\ DOWNLOAD_PROTO_HTTPS/' ipxe/src/config/general.h
 sed -i 's/#undef\tDOWNLOAD_PROTO_FTP/#define\ DOWNLOAD_PROTO_FTP/' ipxe/src/config/general.h
@@ -81,7 +74,6 @@ make clean -C ipxe/src
 rm /var/www/html/index.html
 cp /config-backup/orig.html /var/www/html/index.html
 sed -i "s/gitversion/${VAR1}/" /var/www/html/index.html
-cp /config-backup/branding.h ipxe/src/config/branding.h
 cp /config-backup/general.h ipxe/src/config/general.h
 cp /config-backup/console.h ipxe/src/config/console.h
 echo "Script completed"

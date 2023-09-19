@@ -20,22 +20,13 @@ echo !
 cpair --foreground 6 0
 echo
 
-echo ______iiii__PPPPPPPPPPPPPPPPP___XXXXXXX_______XXXXXXXEEEEEEEEEEEEEEEEEEEEEE____
-echo _____i::::i_P::::::::::::::::P__X:::::X_______X:::::XE::::::::::::::::::::E____
-echo ______iiii__P::::::PPPPPP:::::P_X:::::X_______X:::::XE::::::::::::::::::::E____
-echo ____________PP:::::P_____P:::::PX::::::X_____X::::::XEE::::::EEEEEEEEE::::E____
-echo ____iiiiiii___P::::P_____P:::::PXXX:::::X___X:::::XXX__E:::::E_______EEEEEE____
-echo ____i:::::i___P::::P_____P:::::P___X:::::X_X:::::X_____E:::::E_________________
-echo _____i::::i___P::::PPPPPP:::::P_____X:::::X:::::X______E::::::EEEEEEEEEE_______
-echo _____i::::i___P:::::::::::::PP_______X:::::::::X_______E:::::::::::::::E_______
-echo _____i::::i___P::::PPPPPPPPP_________X:::::::::X_______E:::::::::::::::E_______
-echo _____i::::i___P::::P________________X:::::X:::::X______E::::::EEEEEEEEEE_______
-echo _____i::::i___P::::P_______________X:::::X_X:::::X_____E:::::E_________________
-echo _____i::::i___P::::P____________XXX:::::X___X:::::XXX__E:::::E_______EEEEEE____
-echo ____i::::::iPP::::::PP__________X::::::X_____X::::::XEE::::::EEEEEEEE:::::E____
-echo ____i::::::iP::::::::P__________X:::::X_______X:::::XE::::::::::::::::::::E____
-echo ____i::::::iP::::::::P__________X:::::X_______X:::::XE::::::::::::::::::::E____
-echo ____iiiiiiiiPPPPPPPPPP__________XXXXXXX_______XXXXXXXEEEEEEEEEEEEEEEEEEEEEE____
+echo	#### ########  ##     ## ########
+echo	 ##  ##     ##  ##   ##  ##
+echo	 ##  ##     ##   ## ##   ##
+echo	 ##  ########     ###    ######
+echo	 ##  ##          ## ##   ##
+echo	 ##  ##         ##   ##  ##
+echo	#### ##        ##     ## ########
 sleep 3
 
 cpair --foreground 3 0
@@ -63,8 +54,26 @@ prompt --key 0x13 --timeout 5000 Press Ctrl-S to change settings... && config ||
 cpair --foreground 2 0
 echo Trying again... && goto nextstep
 
+prompt --key 0x0d --timeout 5000 Press CTRL_M for the load Custom menu... && goto find-menu || goto load-menu
+:find-menu
+echo -n Enter Next Server: && read boot-server
+echo -n Enter Boot filename(For example menu.ipxe): && read boot-file
+echo -n Enter Boot protocol (http or tftp): && read boot-proto
+echo Trying boot...
+chain ${boot-proto}://${boot-server}/${boot-file} || goto load-menu
+:load-menu
+imgfree
+echo boot failed.
+echo ${boot-proto}://${boot-server}/${boot-file} not accesable.
+echo We will load integrated menu...
+sleep 3
 :start-menu
-console --picture https://github.com/BuckyMaler/global/raw/master/assets/img/about-visual.png ||
+colour --basic 9 4
+cpair -f 7 -b 9 4
+cpair -f 7 -b 9 0
+cpair -f 7 -b 9 1
+cpair -f 0 -b 7 2
+# console --picture https://github.com/BuckyMaler/global/raw/master/assets/img/about-visual.png ||
 set cls:hex 1b:5b:4a
 set cls ${cls:string}
 set space:hex 20:20
