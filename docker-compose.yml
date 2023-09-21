@@ -1,0 +1,12 @@
+version: "3.7"
+
+services:
+
+  ipxe-forge:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: "ipxe-forge"
+    restart: unless-stopped
+    ports:
+      - '8085:80'   # Web

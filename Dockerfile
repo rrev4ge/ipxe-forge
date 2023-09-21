@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 
 ## Install packages
-RUN apt-get install -y apache2 gcc binutils make perl liblzma-dev mtools syslinux isolinux git xorriso cron
+RUN apt-get install -y apache2 gcc binutils make perl liblzma-dev mtools syslinux isolinux git xorriso cron zip
 
 ## Prepare html
 RUN rm /var/www/html/index.html
@@ -23,7 +23,7 @@ RUN chmod +x /renew.sh
 
 # Copy renew file to the cron.d directory
 COPY renew /etc/cron.d/renew
- 
+
 # Give execution rights on the cron job
 RUN chmod 0644 /etc/cron.d/renew
 

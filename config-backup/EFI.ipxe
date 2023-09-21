@@ -20,13 +20,13 @@ echo !
 cpair --foreground 6 0
 echo
 
-echo__iiii_PPPPPPPP__XX_____XX_EEEEEEEE__
-echo___ii__PP:::::PP__XX___XX__EE________
-echo___ii__PP:::::PP___XX_XX __EE________
-echo___ii__PPPPPPPP_____XXX____EEEEEE____
-echo___ii__PP__________XX_XX __EE________
-echo___ii__PP_________XX___XX__EE________
-echo__iiii_PP________XX_____XX_EEEEEEEE__
+echo __iiii_PPPPPPPP__XX_____XX_EEEEEEEE__
+echo ___ii__PP:::::PP__XX___XX__EE________
+echo ___ii__PP:::::PP___XX_XX __EE________
+echo ___ii__PPPPPPPP_____XXX____EEEEEE____
+echo ___ii__PP__________XX_XX __EE________
+echo ___ii__PP_________XX___XX__EE________
+echo __iiii_PP________XX_____XX_EEEEEEEE__
 sleep 3
 
 cpair --foreground 3 0
@@ -43,10 +43,8 @@ echo -n Enter WiFi SSID: && read ${netiface}/ssid
 echo -n Enter WiFi password: && read ${netiface}/key
 :nextstep
 dhcp || goto failed
-# cpair --foreground 6 0
-# echo Loading... && goto find-menu
-cpair --foreground 4 0
-prompt --key 0x0d --timeout 5000 Press CTRL-M for the load Custom menu... && goto find-menu || goto start-menu
+cpair --foreground 6 0
+echo Loading... && goto find-menu
 :failed
 cpair --foreground 1 0
 echo Cannot estabilish connection... Are you online?
@@ -58,6 +56,9 @@ echo Trying again... && goto nextstep
 
 
 :find-menu
+cpair --foreground 4 0
+prompt --key 0x0d --timeout 5000 Press CTRL-M for the load Custom menu... && goto find-menu-next || goto load-menu
+:find-menu-next
 cpair --foreground 7 0
 echo -n Enter Next Server: && read boot-server
 echo -n Enter Boot filename(For example menu.ipxe): && read boot-file

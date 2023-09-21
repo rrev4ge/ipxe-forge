@@ -3,6 +3,7 @@ git -C /ipxe pull
 VAR1=$(git -C /ipxe log -1 --pretty=format:"%h" --abbrev-commit --abbrev=4)
 grep -q "${VAR1}" /var/www/html/index.html && echo "There is no changes at `date`" && exit ||
 rm -rf /ipxe
+rm /config-backup/branding.h
 rm /config-backup/general.h
 rm /config-backup/console.h
 echo "ipxe dir removed"
@@ -12,8 +13,12 @@ git clone git://git.ipxe.org/ipxe.git
 sed -i "s/gitversion/${VAR1}/" /var/www/html/index.html
 echo "SETTINGS"
 echo BackUp files
+cp ipxe/src/config/branding.h /config-backup/
 cp ipxe/src/config/general.h /config-backup/
 cp ipxe/src/config/console.h /config-backup/
+echo "Editing branding.h"
+sed -i 's/#define\ PRODUCT_NAME\ ""/#define\ PRODUCT_NAME\ "iPXE\ project"/' ipxe/src/config/branding.h
+sed -i 's/#define\ PRODUCT_SHORT_NAME\ "iPXE"/#define\ PRODUCT_SHORT_NAME\ "ipxe-latest"/' ipxe/src/config/branding.h
 echo "Editing general.h"
 sed -i 's/#undef\tDOWNLOAD_PROTO_HTTPS/#define\ DOWNLOAD_PROTO_HTTPS/' ipxe/src/config/general.h
 sed -i 's/#undef\tDOWNLOAD_PROTO_FTP/#define\ DOWNLOAD_PROTO_FTP/' ipxe/src/config/general.h
@@ -52,6 +57,9 @@ make bin/ipxe.kpxe EMBED=Legacy.ipxe -C ipxe/src && mv ipxe/src/bin/ipxe.kpxe /v
 make bin/ipxe.kkpxe EMBED=Legacy.ipxe -C ipxe/src && mv ipxe/src/bin/ipxe.kkpxe /var/www/html/bin/
 make bin/ipxe.kkkpxe EMBED=Legacy.ipxe -C ipxe/src && mv ipxe/src/bin/ipxe.kkkpxe /var/www/html/bin/
 make bin/undionly.kpxe EMBED=Legacy.ipxe -C ipxe/src && mv ipxe/src/bin/undionly.kpxe /var/www/html/bin/
+echo "Compress BIOS Images to archive"
+zip -0 -j /var/www/html/bin/ipxe_all_bios_mages /var/www/html/bin/ipxe.iso /var/www/html/bin/ipxe.dsk /var/www/html/bin/ipxe.lkrn /var/www/html/bin/ipxe.usb /var/www/html/bin/ipxe.pxe /var/www/html/bin/ipxe.kpxe /var/www/html/bin/ipxe.kkpxe /var/www/html/bin/ipxe.kkkpxe /var/www/html/bin/undionly.kpxe
+echo "BIOS Images compressed"
 echo "SETTINGS EFI"
 echo "Editing general.h"
 sed -i 's/#define\ IMAGE_PXE/\/\/#define\ IMAGE_PXE/' ipxe/src/config/general.h
@@ -69,11 +77,15 @@ make bin-i386-efi/ipxe.efi EMBED=EFI.ipxe -C ipxe/src && cp ipxe/src/bin-i386-ef
 make bin-i386-efi/ipxe.usb EMBED=EFI.ipxe -C ipxe/src && mv ipxe/src/bin-i386-efi/ipxe.usb /var/www/html/bin/ipxe-efi-x86.usb
 make bin-i386-efi/ipxe.iso EMBED=EFI.ipxe -C ipxe/src && mv ipxe/src/bin-i386-efi/ipxe.iso /var/www/html/bin/ipxe-efi-x86.iso
 make bin-i386-efi/snponly.efi EMBED=EFI.ipxe -C ipxe/src && cp ipxe/src/bin-i386-efi/snponly.efi /var/www/html/bin/snponly-x86.efi
+echo "Compress EFI Images to archive"
+zip -0 -j /var/www/html/bin/ipxe_all_uefi_mages /var/www/html/bin/bootx64.efi /var/www/html/bin/ipxe-efi-x64.usb /var/www/html/bin/ipxe-efi-x64.iso /var/www/html/bin/snponly-x64.efi /var/www/html/bin/bootia32.efi /var/www/html/bin/ipxe-efi-x86.usb /var/www/html/bin/ipxe-efi-x86.iso /var/www/html/bin/snponly-x86.efi
+echo "EFI Images compressed"
 echo "Cleaning project"
 make clean -C ipxe/src
 rm /var/www/html/index.html
 cp /config-backup/orig.html /var/www/html/index.html
 sed -i "s/gitversion/${VAR1}/" /var/www/html/index.html
+cp /config-backup/branding.h ipxe/src/config/branding.h
 cp /config-backup/general.h ipxe/src/config/general.h
 cp /config-backup/console.h ipxe/src/config/console.h
 echo "Script completed"
